@@ -1,0 +1,29 @@
+.container {
+    margin-top: 100px; /* Atur margin atas pada elemen dengan kelas "container" */
+}
+
+#dataTable {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+    border: 0.1px solid #dee2e6; /* Tambahkan border ke seluruh sisi tabel */
+}
+
+#dataTable th,
+#dataTable td {
+    border: 0.1px solid #dee2e6; /* Tambahkan border ke seluruh sisi sel */
+}
+
+/* Sembunyikan "Show entries," pagination, dan search */
+#dataTable_wrapper .dataTables_info,
+#dataTable_wrapper .dataTables_paginate,
+#dataTable_wrapper .dataTables_filter {
+    display: none;
+}
+#dataTable_length {
+    display: none;
+}
+
+a {
+    text-decoration: none;
+}

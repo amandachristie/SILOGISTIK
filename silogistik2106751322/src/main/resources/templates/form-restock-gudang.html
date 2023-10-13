@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <title>Restock Gudang</title>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar('gudang')}"></nav>
+    <div class="container">
+        <div class="card m-4">
+            <div class="card-header p-4">
+                <h2 class="text-center">Restock Gudang</h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="justify-content-center">
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-right">
+                            <p class="card-text">Nama Gudang</p>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="card-text">: <span th:text="${gudang.nama}"></span></p>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-right">
+                            <p class="card-text">Alamat Gudang</p>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="card-text">: <span th:text="${gudang.alamatGudang}"></span></p>
+                        </div>
+                    </div>
+                    <form th:action="@{'/gudang/' + ${gudang.id} + '/restock-barang'}" th:object="${listGudangBarangDTO}" method="POST">
+                        <th class="d-flex justify-content-end">
+                            <button class="btn btn-primary" type="submit" name="addRow" style="text-align:right">Tambah Row</button>
+                          </th>
+                        <table class="table table-bordered">
+                            <thead class="bg-dark text-white">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Barang</th>
+                                    <th>Kuantitas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="gudangBarang, iterationStatus : *{listGudangBarang}">
+                                    <td><span th:text="${iterationStatus.index + 1}"></span></td>
+                                    <td>
+                                        <select class="form-control" th:field="*{listGudangBarang[__${iterationStatus.index}__].barang}">
+                                            <option th:each="barang : ${listBarangExisting}"
+                                                th:value="${barang.sku}" th:text="${barang.merk}"></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input placeholder="Kuantitas" class="form-control"
+                                            th:field="*{listGudangBarang[__${iterationStatus.index}__].stok}" type="number">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="text-center m-4">
+                            <a class="btn btn-danger " href="/">Batal</a>
+                            <button class="btn btn-primary" type="submit">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="/css/beranda.css">
+    <title>Beranda</title>
+</head>
+
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('beranda')}"></nav>
+<div class="landing-page">
+    <img class="logo" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCdm4m2JLAue7pL5gXneBBBRfW16mWXtWVFuaBnfwgkfdq-upw">
+    <h2>SILOGISTIK</h2>
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card card-gudang">
+                    <div class="card-body">
+                        <p>Gudang</p>
+                        <p class="card-amount" th:text="${jumlahGudang}"></p>
+                        <p>gudang</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card card-barang">
+                    <div class="card-body">
+                        <p>Barang</p>
+                        <p class="card-amount" th:text="${jumlahBarang}"></p>
+                        <p>barang</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card card-permintaan">
+                    <div class="card-body">
+                        <p>Permintaan Pengiriman</p>
+                        <p class="card-amount" th:text="${jumlahPermintaanPengiriman}"></p>
+                        <p>permintaan pengiriman</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card card-karyawan">
+                    <div class="card-body">
+                        <p>Karyawan</p>
+                        <p class="card-amount" th:text="${jumlahKaryawan}"></p>
+                        <p>karyawan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

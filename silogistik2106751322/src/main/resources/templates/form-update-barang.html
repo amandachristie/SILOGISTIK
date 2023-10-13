@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+  <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+  <title>Ubah Barang</title>
+</head>
+
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('barang')}"></nav>
+<div class="container">
+  <div class="card m-4">
+    <div class="card-header p-4">
+      <h2 class="text-center"> Ubah Barang </h2>
+    </div>
+    <div class="card-body p-4">
+      <form th:action="@{/barang/{idBarang}/ubah}" th:object="${barangDTO}" method="POST">
+          <input class="form-control" type="hidden" th:field="*{sku}" />
+
+          SKU: <br>
+          <input class="form-control" type="text" th:field="*{sku}" disabled/>
+          <br><br>
+
+          Merk Barang: <br>
+          <input class="form-control" type="text" th:field="*{merk}" />
+          <br><br>
+
+          Tipe Barang: <br>
+          <table class="table">
+              <tbody>
+              <tr>
+                  <select class="form-control form-select" th:field="*{tipeBarang}" disabled>
+                      <option value="1">Produk Elektronik</option>
+                      <option value="2">Pakaian & Aksesoris</option>
+                      <option value="3">Makanan & Minuman</option>
+                      <option value="4">Kosmetik</option>
+                      <option value="5">Perlengkapan Rumah</option>
+                  </select>
+              </tr>
+              </tbody>
+          </table>
+          <br><br>
+
+          Harga: <br>
+          <input required class="form-control" type="number" th:field="*{hargaBarang}" />
+          <br><br>
+
+          <div class="text-center">
+              <a class="btn btn-outline-primary " href="/">Batal</a>
+              <button class="btn btn-primary" type="submit">Simpan</button>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <title>Cari Barang</title>
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('gudang')}"></nav>
+    <div class="container margin-top">
+        <h2 class="text-center m-4">Cari Barang</h2>
+        <!-- search field -->
+        <div class="text-center m-4">
+            <form th:action="@{/gudang/cari-barang}" method="get">
+                <div class="input-group mb-3">
+                    <select class="form-control" name="sku">
+                        <option value="">Pilih Barang</option>
+                        <th:block th:each="barang : ${listBarang}">
+                            <option th:value="${barang.sku}" th:text="${barang.merk}" th:selected="${barang.sku eq session.selected}"></option>
+                        </th:block>
+                    </select>
+                    <button class="btn btn-primary" type="submit">Cari</button>
+                </div>
+            </form>
+        </div>
+        
+        <table class="table table-bordered" id="dataTable">
+            <thead class="bg-dark text-white text-center">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama Gudang</th>
+                    <th scope="col">Alamat Gudang</th>
+                    <th scope="col">Stok</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr th:each="gudangBarang, iterationStatus: ${daftarGudangBarang}">
+                    <td th:text="${iterationStatus.index + 1}"></td>
+                    <td><a th:text="${gudangBarang.gudang.nama}" th:href="@{/gudang/{idGudang}(idGudang=${gudangBarang.gudang.id})}"></td>
+                    <td th:text="${gudangBarang.gudang.alamatGudang}"></td>
+                    <td th:text="${gudangBarang.stok}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    
+    <!-- Sertakan referensi ke jQuery di sini -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Sertakan referensi ke DataTables JavaScript di sini -->
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    
+    <script>
+        
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "ordering": false, // Menonaktifkan sorting
+            });
+        });
+
+    </script>
+
+<script>
+
+    function fillSearchBox() {
+            var skuSelect = document.getElementById("skuSelect");
+            var selected = sessionStorage.getItem("selected");
+
+            if (lastSearch) {
+                skuSelect.value = selected;
+            }
+        }
+
+        window.onload = fillSearchBox;
+
+</script>
+
+</body>
+</html>
