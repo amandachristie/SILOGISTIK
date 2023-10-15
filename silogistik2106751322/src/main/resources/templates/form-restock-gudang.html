@@ -34,9 +34,15 @@
                         </div>
                     </div>
                     <form th:action="@{'/gudang/' + ${gudang.id} + '/restock-barang'}" th:object="${listGudangBarangDTO}" method="POST">
-                        <th class="d-flex justify-content-end">
-                            <button class="btn btn-primary" type="submit" name="addRow" style="text-align:right">Tambah Row</button>
-                          </th>
+                        <div class="row mb-2">
+                            <div class="col">
+                            </div>
+                            <div class="col-auto">
+                              <th class="d-flex justify-content-end">
+                                <button class="btn btn-primary" type="submit" name="addRow">+Tambah Barang</button>
+                              </th>
+                            </div>
+                          </div>
                         <table class="table table-bordered">
                             <thead class="bg-dark text-white">
                                 <tr>
@@ -49,7 +55,8 @@
                                 <tr th:each="gudangBarang, iterationStatus : *{listGudangBarang}">
                                     <td><span th:text="${iterationStatus.index + 1}"></span></td>
                                     <td>
-                                        <select class="form-control" th:field="*{listGudangBarang[__${iterationStatus.index}__].barang}">
+                                        <select class="form-control form-select" th:field="*{listGudangBarang[__${iterationStatus.index}__].barang}">
+                                            <option value="">Pilih Barang</option>
                                             <option th:each="barang : ${listBarangExisting}"
                                                 th:value="${barang.sku}" th:text="${barang.merk}"></option>
                                         </select>

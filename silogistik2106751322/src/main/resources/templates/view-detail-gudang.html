@@ -51,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="gudangBarang, iterationStatus: ${daftarGudangBarang}">
+                        <tr th:each="gudangBarang, iterationStatus: ${gudang.listGudangBarang}">
                             <td th:text="${iterationStatus.index + 1}"></td>
                             <td><a th:text="${gudangBarang.barang.sku}" th:href="@{/barang/{idBarang}(idBarang=${gudangBarang.barang.sku})}"></td>
                             <td th:text="${gudangBarang.barang.merk}"></td>

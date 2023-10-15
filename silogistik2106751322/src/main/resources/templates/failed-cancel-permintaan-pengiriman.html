@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <title>Permintaan Pengiriman Barang</title>
+</head>
+
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('permintaan-pengiriman')}"></nav>
+    <div class="container">
+        <div class="card p-4" style="margin:100px;">
+            <div class="text-dark text-center p-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/6659/6659895.png" width="100" height="100">
+                <h4 class="m-4"th:text="'Permintaan pengiriman dengan nomor pengiriman ' + ${nomorPengiriman} + ' tidak dapat dibatalkan.'"></h4>
+                <div class="text-center m-4">
+                <a href="/" class="btn btn-primary">Kembali ke beranda</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

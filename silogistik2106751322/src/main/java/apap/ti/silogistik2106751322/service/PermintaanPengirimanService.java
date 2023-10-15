@@ -1,5 +1,6 @@
 package apap.ti.silogistik2106751322.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import apap.ti.silogistik2106751322.model.PermintaanPengiriman;
@@ -14,5 +15,5 @@ public interface PermintaanPengirimanService {
 
     PermintaanPengiriman getPermintaanPengirimanById(Long id);
 
-    void cancelPermintaanPengiriman(Long id);
+    void cancelPermintaanPengiriman(PermintaanPengiriman permintaanPengiriman);
 }

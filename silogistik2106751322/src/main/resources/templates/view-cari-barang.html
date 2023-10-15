@@ -16,8 +16,8 @@
         <div class="text-center m-4">
             <form th:action="@{/gudang/cari-barang}" method="get">
                 <div class="input-group mb-3">
-                    <select class="form-control" name="sku">
-                        <option value="">Pilih Barang</option>
+                    <select class="form-control form-select" name="sku">
+                        <option selected disabled value="">Pilih Barang</option>
                         <th:block th:each="barang : ${listBarang}">
                             <option th:value="${barang.sku}" th:text="${barang.merk}" th:selected="${barang.sku eq session.selected}"></option>
                         </th:block>
@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr th:each="gudangBarang, iterationStatus: ${daftarGudangBarang}">
+                <tr th:each="gudangBarang, iterationStatus: ${listGudangBarang}">
                     <td th:text="${iterationStatus.index + 1}"></td>
                     <td><a th:text="${gudangBarang.gudang.nama}" th:href="@{/gudang/{idGudang}(idGudang=${gudangBarang.gudang.id})}"></td>
                     <td th:text="${gudangBarang.gudang.alamatGudang}"></td>
@@ -64,20 +64,18 @@
 
     </script>
 
-<script>
+    <script>
+        function fillSearchBox() {
+                var skuSelect = document.getElementById("skuSelect");
+                var selected = sessionStorage.getItem("selected");
 
-    function fillSearchBox() {
-            var skuSelect = document.getElementById("skuSelect");
-            var selected = sessionStorage.getItem("selected");
-
-            if (lastSearch) {
-                skuSelect.value = selected;
+                if (lastSearch) {
+                    skuSelect.value = selected;
+                }
             }
-        }
 
-        window.onload = fillSearchBox;
-
-</script>
+            window.onload = fillSearchBox;
+    </script>
 
 </body>
 </html>

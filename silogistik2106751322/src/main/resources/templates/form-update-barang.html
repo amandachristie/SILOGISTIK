@@ -48,7 +48,7 @@
           <br><br>
 
           <div class="text-center">
-              <a class="btn btn-outline-primary " href="/">Batal</a>
+              <a class="btn btn-danger" type="button" th:href="@{/barang/{idBarang}(idBarang=${barangDTO.sku})}">Batal</a>
               <button class="btn btn-primary" type="submit">Simpan</button>
           </div>
       </form>

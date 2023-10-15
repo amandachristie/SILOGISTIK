@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<nav th:replace="~{fragments/navbar :: navbar('barang')}"></nav>
+<nav th:replace="~{fragments/navbar :: navbar('permintaan-pengiriman')}"></nav>
     <div class="container">
     <div class="card m-4">
       <div class="card-header p-4">
@@ -20,12 +20,13 @@
       </div>
       <div class="card-body p-4">
         <div class="justify-content-center">
-          <form th:action="@{/permintaan-pengiriman/tambah}" th:object="${listPermintaanPengirimanBarangDTO}" method="POST">
+          <form th:action="@{/permintaan-pengiriman/tambah}" th:object="${listPermintaanPengirimanBarangDTO}" method="POST" class="row g-3 needs-validation" novalidate>
             
             <div class="row mb-4">
               <div class="col-md-6">
                   Karyawan Bertugas: <br>
-                  <select class="form-control" th:field="*{permintaanPengirimanDTO.karyawan.id}">
+                  <select class="form-control form-select" th:field="*{permintaanPengirimanDTO.karyawan.id}">
+                    <option value="">Pilih Karyawan</option>
                     <option th:each="karyawan : ${listKaryawanExisting}"
                         th:value="${karyawan.id}" th:text="${karyawan.nama}"></option>
                   </select>
@@ -39,7 +40,7 @@
             <div class="row mb-4">
               <div class="col-md-6">
                 Nama Penerima: <br>
-                <input class="form-control" type="text" th:field="*{permintaanPengirimanDTO.namaPenerima}" />
+                <input class="form-control" type="text" th:field="*{permintaanPengirimanDTO.namaPenerima}" required/>
               </div>
               <div class="col-md-6">
                 Jenis Layanan: <br>
@@ -55,11 +56,11 @@
             <div class="row mb-4">
               <div class="col-md-6">
                 Alamat Penerima: <br>
-                <input class="form-control" type="text" th:field="*{permintaanPengirimanDTO.alamatPenerima}" />
+                <input class="form-control" type="text" th:field="*{permintaanPengirimanDTO.alamatPenerima}" required/>
               </div>
               <div class="col-md-6">
                 Biaya Pengiriman: <br>
-                <input class="form-control" type="text" th:field="*{permintaanPengirimanDTO.biayaPengiriman}" />
+                <input class="form-control" type="number" th:field="*{permintaanPengirimanDTO.biayaPengiriman}"required/>
               </div>
             </div>
             
@@ -86,7 +87,8 @@
                     <tr th:each="permintaanPengirimanBarang, iterationStatus : *{listPermintaanPengirimanBarang}">
                         <td><span th:text="${iterationStatus.index + 1}"></span></td>
                         <td>
-                            <select class="form-control" th:field="*{listPermintaanPengirimanBarang[__${iterationStatus.index}__].barang.sku}">
+                            <select class="form-control form-select" th:field="*{listPermintaanPengirimanBarang[__${iterationStatus.index}__].barang.sku}">
+                                <option value="">Pilih Barang</option>
                                 <option th:each="barang : ${listBarangExisting}"
                                     th:value="${barang.sku}" th:text="${barang.merk}"></option>
                             </select>
@@ -108,6 +110,5 @@
       </div>
     </div>
   </div>
-
 </body>
 </html>

@@ -22,17 +22,6 @@ public class GudangBarangServiceImpl implements GudangBarangService{
     }
 
     @Override
-    public List<GudangBarang> getDaftarGudangBarangByIdGudang(Long idGudang) {
-        return gudangBarangDb.findGudangBarangByGudang_Id(idGudang);
-    }
-
-    @Override
-    public List<GudangBarang> getDaftarGudangBarangByIdBarang(String skuBarang) {
-        return gudangBarangDb.findGudangBarangByBarang_Sku(skuBarang);
-    }
-
-
-    @Override
     public GudangBarang getByGudangAndBarang(Gudang gudang, Barang barang) {
         return gudangBarangDb.findByGudangAndBarang(gudang, barang);
     }

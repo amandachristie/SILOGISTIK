@@ -10,10 +10,6 @@ public interface GudangBarangService {
     
     void saveGudangBarang(GudangBarang gudangBarang);
 
-    List<GudangBarang> getDaftarGudangBarangByIdGudang(Long idGudang);
-
-    List<GudangBarang> getDaftarGudangBarangByIdBarang(String idBarang);
-
     GudangBarang getByGudangAndBarang(Gudang gudang, Barang barang);
 
     Integer getTotalStokByIdBarang(String idBarang);

@@ -32,7 +32,7 @@ public class Barang {
     private String merk;
 
     @NotNull
-    @Column(name = "harga_barang", nullable = false)
+    @Column(name = "harga_barang", nullable = false, length = 20)
     private BigInteger hargaBarang;
 
     @OneToMany(mappedBy = "barang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
