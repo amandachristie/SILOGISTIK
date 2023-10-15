@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+  <title>Error</title>
+</head>
+
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('beranda')}"></nav>
+  <div class="container">
+    <div class="card p-4" style="margin:100px;">
+        <div class="text-dark text-center p-2">
+            <img src="https://cdn-icons-png.flaticon.com/512/6659/6659895.png" width="100" height="100">
+            <div th:each="error: ${errors}" class="text-center m-4">
+              <h4 th:text="${error}"></h4>
+            </div>
+            <div class="text-center m-4">
+            <a href="/" class="btn btn-primary">Kembali ke beranda</a>
+            </div>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

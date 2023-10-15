@@ -19,7 +19,7 @@
         <div class="justify-content-center">
           <form th:action="@{/barang/tambah}" th:object="${barangDTO}" method="POST">
             Merk Barang: <br>
-            <input class="form-control" type="text" th:field="*{merk}" />
+            <input class="form-control" type="text" th:field="*{merk}" required/>
             <br><br>
 
             Tipe Barang: <br>
@@ -39,11 +39,11 @@
             <br><br>
 
             Harga: <br>
-            <input required class="form-control" type="number" th:field="*{hargaBarang}" />
+            <input required class="form-control" type="number" th:field="*{hargaBarang}"/>
             <br>
 
             <div class="text-center m-4">
-              <a class="btn btn-danger " href="/">Batal</a>
+              <a class="btn btn-danger " href="/barang">Batal</a>
               <button class="btn btn-primary" type="submit">Simpan</button>
             </div>
 

@@ -6,9 +6,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+
 
 import apap.ti.silogistik2106751322.model.PermintaanPengiriman;
 import apap.ti.silogistik2106751322.repository.PermintaanPengirimanDb;
+
 
 @Service
 public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanService {
@@ -20,12 +23,12 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
     public void savePermintaanPengiriman(PermintaanPengiriman permintaanPengiriman, int jumlahPesananBarang) {
         permintaanPengiriman.setNomorPengiriman(generateNomorPengiriman(jumlahPesananBarang, permintaanPengiriman.getJenisLayanan()));
         permintaanPengiriman.setWaktuPermintaan(LocalDateTime.now());
-        permintaanPengirimanDb.save(permintaanPengiriman);
+        permintaanPengirimanDb.save(permintaanPengiriman); 
     }
 
     @Override
     public List<PermintaanPengiriman> getAllPermintaanPengiriman() {
-        return permintaanPengirimanDb.findAllOrderByWaktuPermintaanAsc();
+        return permintaanPengirimanDb.findAllByOrderByWaktuPermintaanDesc();
     }
 
     @Override
@@ -70,8 +73,7 @@ public class PermintaanPengirimanServiceImpl implements PermintaanPengirimanServ
     }
 
     @Override
-    public void cancelPermintaanPengiriman(Long id) {
-        var permintaanPengiriman = getPermintaanPengirimanById(id);
+    public void cancelPermintaanPengiriman(PermintaanPengiriman permintaanPengiriman) {
         permintaanPengiriman.setIsCancelled(true);
         permintaanPengirimanDb.save(permintaanPengiriman);
     }

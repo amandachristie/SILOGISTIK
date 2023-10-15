@@ -77,10 +77,8 @@ public class GudangController {
         var gudangSelected = gudangService.getGudangById(idGudang);
         
         ReadGudangResponseDTO gudang = gudangMapper.gudangToReadGudangResponseDTO(gudangSelected);
-        List<GudangBarang> daftarGudangBarang = gudangBarangService.getDaftarGudangBarangByIdGudang(idGudang);
 
         model.addAttribute("gudang", gudang);
-        model.addAttribute("daftarGudangBarang", daftarGudangBarang);
 
         return "view-detail-gudang";
     }
@@ -89,10 +87,12 @@ public class GudangController {
     public String cariBarang(@RequestParam(name = "sku", required = false) String sku, Model model, HttpSession session) {
         
         // Mendapatkan daftar gudang yang memiliki barang dengan SKU tertentu
-        List<GudangBarang> daftarGudangBarang = gudangBarangService.getDaftarGudangBarangByIdBarang(sku);
-        session.setAttribute("selected", sku);
+        if (sku != null) {
+            List<GudangBarang> listGudangBarang = barangService.getBarangBySku(sku).getListGudangBarang();
+            model.addAttribute("listGudangBarang", listGudangBarang);
+        }
 
-        model.addAttribute("daftarGudangBarang", daftarGudangBarang);
+        session.setAttribute("selected", sku);
         model.addAttribute("listBarang", barangService.getAllBarang());
 
         return "view-cari-barang";

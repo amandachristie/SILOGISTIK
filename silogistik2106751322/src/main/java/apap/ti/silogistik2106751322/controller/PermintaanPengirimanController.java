@@ -3,18 +3,26 @@ package apap.ti.silogistik2106751322.controller;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.ti.silogistik2106751322.dto.PermintaanPengirimanBarangMapper;
 import apap.ti.silogistik2106751322.dto.PermintaanPengirimanMapper;
@@ -22,6 +30,7 @@ import apap.ti.silogistik2106751322.dto.request.CreateListPermintaanPengirimanBa
 import apap.ti.silogistik2106751322.dto.request.CreatePermintaanPengirimanBarangRequestDTO;
 import apap.ti.silogistik2106751322.dto.response.ReadPermintaanPengirimanBarangResponseDTO;
 import apap.ti.silogistik2106751322.dto.response.ReadPermintaanPengirimanResponseDTO;
+import apap.ti.silogistik2106751322.model.GudangBarang;
 import apap.ti.silogistik2106751322.model.PermintaanPengiriman;
 import apap.ti.silogistik2106751322.model.PermintaanPengirimanBarang;
 import apap.ti.silogistik2106751322.repository.PermintaanPengirimanDb;
@@ -29,6 +38,8 @@ import apap.ti.silogistik2106751322.service.BarangService;
 import apap.ti.silogistik2106751322.service.KaryawanService;
 import apap.ti.silogistik2106751322.service.PermintaanPengirimanBarangService;
 import apap.ti.silogistik2106751322.service.PermintaanPengirimanService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class PermintaanPengirimanController {
@@ -94,9 +105,25 @@ public class PermintaanPengirimanController {
     }
 
     @PostMapping("/permintaan-pengiriman/tambah")
-    public String addPermintaanPengiriman(@ModelAttribute CreateListPermintaanPengirimanBarangRequestDTO listPermintaanPengirimanBarangDTO, Model model) {
+    public String addPermintaanPengiriman(@Valid @ModelAttribute CreateListPermintaanPengirimanBarangRequestDTO listPermintaanPengirimanBarangDTO, BindingResult bindingResult, Model model) {
         
-        var permintaanPengirimanDTO = listPermintaanPengirimanBarangDTO.getPermintaanPengirimanDTO();        
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(error -> {
+                        if (error instanceof FieldError) {
+                            FieldError fieldError = (FieldError) error;
+                            return fieldError.getField() + ": " + error.getDefaultMessage();
+                        }
+                        return error.getDefaultMessage();
+                    })
+                    .collect(Collectors.toList());
+
+                    model.addAttribute("errors", errors);
+            return "error-viewall";
+        }
+
+        var permintaanPengirimanDTO = listPermintaanPengirimanBarangDTO.getPermintaanPengirimanDTO(); 
         var permintaanPengiriman = permintaanPengirimanMapper.createPermintaanPengirimanRequestDTOToPermintaanPengiriman(permintaanPengirimanDTO);
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -180,11 +207,65 @@ public class PermintaanPengirimanController {
     @GetMapping("/permintaan-pengiriman/{idPermintaanPengiriman}/cancel")
     public String cancelPermintaan(@PathVariable(value="idPermintaanPengiriman") Long idPermintaanPengiriman, Model model) {
 
-        permintaanPengirimanService.cancelPermintaanPengiriman(idPermintaanPengiriman);
+        var permintaanPengiriman = permintaanPengirimanService.getPermintaanPengirimanById(idPermintaanPengiriman);
 
-        model.addAttribute("nomorPengiriman", 
-                        permintaanPengirimanService.getPermintaanPengirimanById(idPermintaanPengiriman).getNomorPengiriman());
+        // Menghitung selisih waktu antara waktu permintaan dan waktu saat ini
+        LocalDateTime waktuPermintaan = permintaanPengiriman.getWaktuPermintaan();
+        LocalDateTime waktuSekarang = LocalDateTime.now();
+        // Duration durasi = Duration.between(waktuPermintaan, waktuSekarang);
+        Duration durasi = Duration.between(waktuPermintaan, waktuSekarang);
+        
+        model.addAttribute("nomorPengiriman", permintaanPengiriman.getNomorPengiriman());
+
+        if (durasi.toHours() > 24) {
+            return "failed-cancel-permintaan-pengiriman";
+        } else {
+            permintaanPengirimanService.cancelPermintaanPengiriman(permintaanPengiriman);
+        }
 
         return "success-cancel-permintaan-pengiriman";
     }
+
+    @GetMapping("/filter-permintaan-pengiriman")
+    public String filterPermintaanPengiriman(@RequestParam(name = "sku", required = false) String sku,
+                                            @RequestParam(name = "startDate", required = false ) String startDate,
+                                            @RequestParam(name = "endDate", required = false) String endDate,
+                                            Model model, HttpSession session) {
+
+        if (sku != null && startDate != null && endDate != null) {
+            startDate += "T00:00:00";
+            endDate += "T00:00:00";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            LocalDateTime localStart = LocalDateTime.parse(startDate, formatter);
+            LocalDateTime localEnd = LocalDateTime.parse(endDate, formatter);
+
+            List<PermintaanPengirimanBarang> listPermintaanPengirimanBarang = barangService.getBarangBySku(sku).getListPermintaanPengirimanBarang();
+            List<ReadPermintaanPengirimanResponseDTO> listPermintaanPengiriman = new ArrayList<>();
+            for (PermintaanPengirimanBarang permintaanPengirimanBarang : listPermintaanPengirimanBarang) {
+                boolean check = permintaanPengirimanBarangService.isPermintaanPengirimanInDateRange(localStart, localEnd, permintaanPengirimanBarang.getId());
+                if (check) {
+                    var permintaanPengirimanSelected = permintaanPengirimanBarang.getPermintaanPengiriman();
+                    ReadPermintaanPengirimanResponseDTO permintaanPengiriman = permintaanPengirimanMapper.permintaanPengirimanToReadPermintaanPengirimanResponseDTO(permintaanPengirimanSelected);
+                    SimpleDateFormat tanggalPengirimanFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    DateTimeFormatter waktuPermintaanFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy, HH:mm");
+            
+                    //Membuat format tanggalPengiriman untuk ditampilkan 
+                    String outputDateStr = tanggalPengirimanFormat.format(permintaanPengirimanSelected.getTanggalPengiriman());
+                    permintaanPengiriman.setTanggalPengiriman(outputDateStr);
+                    
+                    //Membuat format waktuPermintaan untuk ditampilkan 
+                    String outputTimeStr = permintaanPengirimanSelected.getWaktuPermintaan().format(waktuPermintaanFormat);
+                    permintaanPengiriman.setWaktuPermintaan(outputTimeStr);
+                    listPermintaanPengiriman.add(permintaanPengiriman);
+                }
+            }
+            model.addAttribute("listPermintaanPengiriman", listPermintaanPengiriman);
+        }
+
+        session.setAttribute("selected", sku);
+        model.addAttribute("listBarang", barangService.getAllBarang());
+
+        return "filter-permintaan-pengiriman";
+    }
+
 }
